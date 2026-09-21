@@ -1,0 +1,157 @@
+:root {
+  --pink: #ff8fb1;
+  --yellow: #ffe066;
+  --blue: #74c0fc;
+  --purple: #b197fc;
+  --cream: #fff9f0;
+  --ink: #4a3f55;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Comic Sans MS", "Segoe UI", "Apple SD Gothic Neo", sans-serif;
+  background: linear-gradient(160deg, #fff0f6 0%, #e7f5ff 100%);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.hero {
+  text-align: center;
+  padding: 2rem 1rem 1rem;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  margin: 0;
+  color: var(--pink);
+  text-shadow: 2px 2px 0 #fff, 4px 4px 0 rgba(0, 0, 0, 0.05);
+}
+
+.hero p {
+  font-size: 1.1rem;
+  margin: 0.5rem 0 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 2fr;
+  gap: 1.5rem;
+  max-width: 960px;
+  margin: 1rem auto 3rem;
+  padding: 0 1rem;
+}
+
+@media (max-width: 640px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.song-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.song-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border: none;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.08);
+  font-size: 1.15rem;
+  font-family: inherit;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.2s ease;
+}
+
+.song-button:hover {
+  transform: translateY(-2px);
+  background: var(--yellow);
+}
+
+.song-button.active {
+  background: var(--blue);
+  color: #fff;
+}
+
+.song-emoji {
+  font-size: 1.6rem;
+}
+
+.song-view {
+  min-height: 300px;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 260px;
+  font-size: 1.3rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 24px;
+  border: 3px dashed var(--purple);
+}
+
+.lyrics-card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 1.75rem;
+  box-shadow: 0 8px 24px rgba(177, 151, 252, 0.35);
+}
+
+.lyrics-card h2 {
+  margin-top: 0;
+  color: var(--purple);
+  font-size: 2rem;
+}
+
+#lyrics-lines {
+  font-size: 1.3rem;
+  line-height: 2.2;
+  padding-left: 1.5rem;
+}
+
+#lyrics-lines li {
+  transition: background 0.2s ease, transform 0.2s ease;
+  border-radius: 10px;
+  padding: 0 0.4rem;
+}
+
+#lyrics-lines li.highlight {
+  background: var(--yellow);
+  transform: scale(1.04);
+  transform-origin: left center;
+}
+
+.singalong-btn {
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--pink);
+  color: #fff;
+  font-size: 1.15rem;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
+}
+
+.singalong-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

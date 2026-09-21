@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>아기 동요 앱 🎵</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>🎵 아기 동요 앱</h1>
+      <p>좋아하는 동요를 골라 함께 불러요!</p>
+    </header>
+
+    <main class="layout">
+      <section class="song-list" aria-label="동요 목록">
+        <ul>
+          {% for song in songs %}
+          <li>
+            <button
+              class="song-button"
+              data-song-id="{{ song.id }}"
+              type="button"
+            >
+              <span class="song-emoji">{{ song.emoji }}</span>
+              <span class="song-title">{{ song.title }}</span>
+            </button>
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+
+      <section class="song-view" aria-live="polite">
+        <div class="placeholder" id="placeholder">
+          <p>왼쪽에서 동요를 골라 주세요 👈</p>
+        </div>
+        <article class="lyrics-card" id="lyrics-card" hidden>
+          <h2 id="lyrics-title"></h2>
+          <ol id="lyrics-lines"></ol>
+          <button id="singalong-btn" class="singalong-btn" type="button">
+            ▶️ 따라 부르기
+          </button>
+        </article>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
