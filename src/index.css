@@ -386,6 +386,97 @@ button {
   font-size: 30px;
 }
 
+.lyric .ko,
+.lyric .en,
+.card h2 {
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}
+
+.mini .titles span {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 720px) {
+  .app {
+    width: min(1120px, calc(100% - 20px));
+    padding-bottom: 132px;
+  }
+
+  .sheet {
+    padding: 10px 12px calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .sheet-art {
+    width: min(128px, 36vw);
+    height: min(128px, 36vw);
+    margin: 6px auto 2px;
+    border-radius: 28px;
+    font-size: 58px;
+  }
+
+  .sheet h2 {
+    font-size: 22px;
+    margin-top: 4px;
+  }
+
+  .sheet .en-title {
+    display: none;
+  }
+
+  .lyrics {
+    padding: 4px 2px 10px;
+  }
+
+  .lyric {
+    padding: 7px 2px;
+  }
+
+  .lyric .ko {
+    font-size: 17px;
+    line-height: 1.35;
+  }
+
+  .lyric .en {
+    display: none;
+  }
+
+  .lyric.active {
+    transform: none;
+  }
+
+  .lyric.active .ko {
+    font-size: 20px;
+  }
+
+  .controls {
+    margin-top: 8px;
+    gap: 8px;
+  }
+
+  .controls .play {
+    width: 58px;
+    height: 58px;
+    font-size: 22px;
+  }
+
+  .tools,
+  .credit {
+    margin-top: 8px;
+  }
+
+  .card h2 {
+    font-size: 17px;
+  }
+
+  .card .en {
+    display: none;
+  }
+}
+
 .progress {
   display: grid;
   grid-template-columns: auto 1fr auto;

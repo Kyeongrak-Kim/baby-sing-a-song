@@ -5,9 +5,12 @@ import type { Category, RepeatMode, Song } from './types'
 
 const songs = songsData as Song[]
 
-const CATEGORIES: { id: 'all' | 'favorites' | Category; label: string }[] = [
+type FilterId = 'all' | 'favorites' | 'korean' | Category
+
+const CATEGORIES: { id: FilterId; label: string }[] = [
   { id: 'all', label: '전체' },
   { id: 'favorites', label: '찜' },
+  { id: 'korean', label: '우리 동요' },
   { id: 'lullaby', label: '자장가' },
   { id: 'animal', label: '동물' },
   { id: 'play', label: '놀이' },
@@ -29,7 +32,7 @@ const REPEAT_LABEL: Record<RepeatMode, string> = {
 export default function App() {
   const player = usePlayer(songs)
   const [query, setQuery] = useState('')
-  const [category, setCategory] = useState<(typeof CATEGORIES)[number]['id']>('all')
+  const [category, setCategory] = useState<FilterId>('all')
   const [showSleep, setShowSleep] = useState(false)
 
   useEffect(() => {
@@ -43,7 +46,9 @@ export default function App() {
     const q = query.trim().toLowerCase()
     return songs.filter((song) => {
       if (category === 'favorites' && !player.favorites.includes(song.id)) return false
-      if (category !== 'all' && category !== 'favorites' && song.category !== category) return false
+      if (category === 'korean' && !song.korean) return false
+      if (category !== 'all' && category !== 'favorites' && category !== 'korean' && song.category !== category)
+        return false
       if (!q) return true
       return `${song.titleKo} ${song.titleEn}`.toLowerCase().includes(q)
     })

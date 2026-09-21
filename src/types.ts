@@ -14,6 +14,7 @@ export type Song = {
   titleEn: string
   emoji: string
   category: Category
+  korean?: boolean
   color: string
   accent: string
   bpm: number
