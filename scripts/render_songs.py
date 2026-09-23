@@ -61,118 +61,135 @@ def ads(n: int, a: float, d: float, s: float, r: float) -> np.ndarray:
     return env
 
 
-def tone(freq: float, n: int, kind: str, rng: np.random.Generator) -> np.ndarray:
-    t = np.arange(n) / SR
-    if kind == "glock":
-        decay = np.exp(-t * 6.4)
-        sig = (
-            np.sin(2 * math.pi * freq * t)
-            + 0.55 * np.sin(2 * math.pi * freq * 2.01 * t)
-            + 0.22 * np.sin(2 * math.pi * freq * 3.02 * t)
-            + 0.08 * np.sin(2 * math.pi * freq * 5.04 * t)
-        )
-        ping = np.exp(-t * 90) * np.sin(2 * math.pi * freq * 6.8 * t) * 0.12
-        return (sig * decay + ping) * ads(n, 0.002, 0.03, 0.35, 0.1)
-    if kind == "xylo":
-        decay = np.exp(-t * 7.2)
-        sig = np.sin(2 * math.pi * freq * t) + 0.32 * np.sin(2 * math.pi * freq * 3.02 * t)
-        return sig * decay * ads(n, 0.001, 0.025, 0.28, 0.08)
-    if kind == "toy":
-        decay = np.exp(-t * 4.6)
-        sig = (
-            np.sin(2 * math.pi * freq * t)
-            + 0.28 * np.sin(2 * math.pi * freq * 2 * t)
-            + 0.1 * np.sin(2 * math.pi * freq * 4.02 * t)
-        )
-        return sig * decay * ads(n, 0.004, 0.04, 0.42, 0.1)
-    if kind == "pad":
-        sig = 0.55 * np.sin(2 * math.pi * freq * t) + 0.2 * np.sin(2 * math.pi * freq * 2 * t)
-        return sig * ads(n, 0.02, 0.06, 0.35, 0.16)
-    decay = np.exp(-t * 3.8)
-    sig = np.sin(2 * math.pi * freq * t) + 0.2 * np.sin(2 * math.pi * freq * 2 * t)
-    return sig * decay * ads(n, 0.004, 0.05, 0.4, 0.12)
-
-
-def woodblock(n: int, rng: np.random.Generator) -> np.ndarray:
-    t = np.arange(n) / SR
-    click = np.sin(2 * math.pi * 980 * t) * np.exp(-t * 55)
-    noise = rng.normal(0, 1, n) * np.exp(-t * 90)
-    return (click * 0.35 + noise * 0.12)
-
-
 def hz(midi: int) -> float:
     return 440.0 * (2 ** ((midi - 69) / 12))
 
 
+def tone(freq: float, n: int, kind: str, rng: np.random.Generator) -> np.ndarray:
+    t = np.arange(n) / SR
+    if kind == "piano":
+        decay = np.exp(-t * (2.1 + freq / 1800))
+        sig = (
+            np.sin(2 * math.pi * freq * t)
+            + 0.22 * np.sin(2 * math.pi * freq * 2 * t)
+            + 0.08 * np.sin(2 * math.pi * freq * 3 * t)
+            + 0.03 * np.sin(2 * math.pi * freq * 4 * t)
+        )
+        hammer = rng.normal(0, 1, n) * np.exp(-t * 70) * 0.03
+        return (sig * decay + hammer) * ads(n, 0.006, 0.07, 0.42, 0.16)
+    if kind == "celesta":
+        decay = np.exp(-t * 4.4)
+        sig = np.sin(2 * math.pi * freq * t) + 0.12 * np.sin(2 * math.pi * freq * 2 * t)
+        return sig * decay * ads(n, 0.004, 0.05, 0.3, 0.1)
+    if kind == "pad":
+        sig = 0.7 * np.sin(2 * math.pi * freq * t) + 0.12 * np.sin(2 * math.pi * freq * 2 * t)
+        return sig * ads(n, 0.04, 0.1, 0.38, 0.22)
+    if kind == "bass":
+        sig = np.sin(2 * math.pi * freq * t) * np.exp(-t * 3.2)
+        return sig * ads(n, 0.01, 0.06, 0.35, 0.12)
+    decay = np.exp(-t * 3.2)
+    sig = np.sin(2 * math.pi * freq * t) + 0.12 * np.sin(2 * math.pi * freq * 2 * t)
+    return sig * decay * ads(n, 0.006, 0.05, 0.4, 0.12)
+
+
+def soft_tick(n: int, rng: np.random.Generator) -> np.ndarray:
+    t = np.arange(n) / SR
+    click = np.sin(2 * math.pi * 420 * t) * np.exp(-t * 48)
+    noise = rng.normal(0, 1, n) * np.exp(-t * 70)
+    return click * 0.12 + noise * 0.04
+
+
+def lowpass(sig: np.ndarray, cutoff: float) -> np.ndarray:
+    if len(sig) < 16:
+        return sig
+    k = max(3, int(SR / cutoff))
+    kernel = np.exp(-np.arange(k) * 2.8 / k)
+    kernel /= kernel.sum()
+    return np.convolve(sig, kernel, mode="same")
+
+
+def add_echo(mix: np.ndarray, delay_s: float, wet: float) -> None:
+    shift = int(delay_s * SR)
+    if shift <= 0 or shift >= len(mix):
+        return
+    mix[shift:] += mix[:-shift] * wet
+
+
+def song_bpm(song: dict) -> int:
+    style = song.get("style", "play")
+    bpm = int(song["bpm"])
+    if style == "lullaby":
+        return max(66, min(bpm, 86))
+    return max(88, min(bpm, 110))
+
+
 def render_song(song: dict) -> tuple[np.ndarray, list[dict], float]:
     notes = parse_notes(song["notes"])
-    bpm = max(int(round(song["bpm"] * 1.22)), 112)
+    style = song.get("style", "play")
+    bpm = song_bpm(song)
     beat_sec = 60.0 / bpm
-    lead = 0.28
-    tail = 0.55
-    transpose = 7
+    lead = 0.32
+    tail = 0.7
     total_beats = sum(d for _, d in notes)
     duration = lead + total_beats * beat_sec + tail
     n_total = int(duration * SR) + 1
     mix = np.zeros(n_total, dtype=np.float64)
     rng = np.random.default_rng(abs(hash(song["id"])) % (2**32))
-    perc = True
+    use_perc = bool(song.get("perc")) and style != "lullaby"
 
     beat_pos = 0.0
-    events: list[tuple[float, float, int | None]] = []
     for midi, dur in notes:
         start = lead + beat_pos * beat_sec
         end = start + dur * beat_sec
-        events.append((start, end, midi))
         beat_pos += dur
         if midi is None:
             continue
-        midi = min(midi + transpose, 98)
-        n = int((end - start + 0.1) * SR)
+        midi = min(max(midi, 50), 79)
+        gap = 0.018 if dur >= 0.45 else 0.006
+        n = int(max(end - start - gap, 0.04) * SR)
         i0 = int(start * SR)
         i1 = min(n_total, i0 + n)
         n = i1 - i0
         if n <= 0:
             continue
-        melody = tone(hz(midi), n, "glock", rng)
-        sparkle = tone(hz(midi), n, "xylo", rng)
-        toy = tone(hz(midi), n, "toy", rng)
-        bass = tone(hz(max(midi - 12, 40)), n, "pad", rng) * 0.22
-        third = 4 if (midi % 12) in (0, 5, 7) else 3
-        harm = tone(hz(min(midi + third, 100)), n, "glock", rng) * 0.16
-        mix[i0:i1] += 0.4 * melody + 0.34 * sparkle + 0.22 * toy + bass + harm
+        piano = tone(hz(midi), n, "piano", rng)
+        if style == "lullaby":
+            pad = tone(hz(max(midi - 12, 40)), n, "pad", rng) * 0.1
+            mix[i0:i1] += 0.78 * piano + pad
+        else:
+            air = tone(hz(midi), n, "celesta", rng) * 0.14
+            bass = np.zeros(n)
+            if abs((beat_pos - dur) % 2) < 0.08:
+                bass = tone(hz(max((midi // 12) * 12, 43)), n, "bass", rng) * 0.12
+            mix[i0:i1] += 0.74 * piano + air + bass
+            if use_perc and abs(beat_pos - round(beat_pos)) < 0.08:
+                pn = min(int(0.05 * SR), n_total - i0)
+                mix[i0 : i0 + pn] += soft_tick(pn, rng)
 
-        if abs(beat_pos - round(beat_pos)) < 0.08:
-            pn = min(int(0.06 * SR), n_total - i0)
-            mix[i0 : i0 + pn] += woodblock(pn, rng)
-
+    mix = lowpass(mix, 2400 if style == "lullaby" else 2800)
+    add_echo(mix, 0.11, 0.12)
+    add_echo(mix, 0.21, 0.06)
     peak = np.max(np.abs(mix)) or 1.0
-    mix = mix / peak * 0.9
-    fade = int(0.04 * SR)
+    mix = mix / peak * 0.72
+    fade = int(0.05 * SR)
     mix[:fade] *= np.linspace(0, 1, fade)
     mix[-fade:] *= np.linspace(1, 0, fade)
 
-    lyrics = []
     lines = song["lines"]
-    last_span = 4.0
-    if len(lines) >= 2:
-        last_span = max(4.0, float(lines[-1]["beat"] - lines[-2]["beat"]))
-    needed = float(lines[-1]["beat"]) + last_span
-    scale = total_beats / needed if needed > total_beats else 1.0
+    lyrics = []
     for i, line in enumerate(lines):
-        start_beat = float(line["beat"]) * scale
-        if i + 1 < len(lines):
-            end_beat = float(lines[i + 1]["beat"]) * scale
-        else:
-            end_beat = total_beats
+        start_beat = float(line["beat"])
+        if start_beat >= total_beats:
+            raise ValueError(f"{song['id']} lyric beat {start_beat} past {total_beats} beats")
+        end_beat = float(lines[i + 1]["beat"]) if i + 1 < len(lines) else total_beats
         start = lead + start_beat * beat_sec
         end = lead + end_beat * beat_sec
         lyrics.append(
             {
                 "start": round(start, 3),
-                "end": round(min(max(end, start + 0.4), duration - 0.15), 3),
-                "ko": line["ko"],
-                "en": line["en"],
+                "end": round(min(max(end, start + 0.4), duration - 0.12), 3),
+                "ko": line["ko"].strip(),
+                "en": line["en"].strip(),
             }
         )
     return mix, lyrics, duration
@@ -233,10 +250,10 @@ SONGS = [
         "titleEn": "Twinkle Twinkle Little Star",
         "emoji": "⭐",
         "korean": True,
-        "category": "play",
+        "category": "lullaby",
         "color": "#F7D6E8",
         "accent": "#E891B5",
-        "bpm": 88,
+        "bpm": 80,
         "style": "lullaby",
         "notes": (
             "C4q C4q G4q G4q A4q A4q G4h "
@@ -272,24 +289,24 @@ SONGS = [
         "style": "play",
         "perc": True,
         "notes": (
-            "E4e G4e G4e A4q G4e E4q. "
-            "E4e G4e G4e A4q G4e E4q. "
-            "E4e G4e G4e A4q G4e C5q. "
-            "A4e G4q E4h Restq "
-            "E4e G4e G4e A4q G4e E4q. "
-            "E4e G4e G4e A4q G4e E4q. "
-            "E4e G4e G4e A4q G4e C5q. "
-            "A4e G4q E4h Restq"
+            "C4q E4q G4q G4q E4q C4h Restq "
+            "D4q F4q F4q D4q C4h Restq "
+            "C4q E4q G4q G4q E4q C4h Restq "
+            "D4q F4q D4q B3q C4w "
+            "C4q E4q G4q G4q E4q C4h Restq "
+            "D4q F4q F4q D4q C4h Restq "
+            "C4q E4q G4q G4q E4q C4h Restq "
+            "D4q F4q D4q B3q C4w"
         ),
         "lines": [
             {"beat": 0, "ko": "나비야 나비야", "en": "Butterfly, butterfly"},
-            {"beat": 6, "ko": "이리 날아오너라", "en": "Come flying over here"},
-            {"beat": 12, "ko": "노랑나비 흰나비", "en": "Yellow one, white one"},
-            {"beat": 18, "ko": "춤을 추며 오너라", "en": "Come dancing through the air"},
-            {"beat": 26, "ko": "봄바람에 꽃잎도", "en": "Flower petals in the breeze"},
-            {"beat": 32, "ko": "방긋방긋 웃으며", "en": "Smile and bloom so sweetly"},
-            {"beat": 38, "ko": "참새도 짹짹짹", "en": "Sparrows chirp tweet-tweet"},
-            {"beat": 44, "ko": "노래하며 춤춘다", "en": "Singing as they dance along"},
+            {"beat": 8, "ko": "이리 날아오너라", "en": "Come flying over here"},
+            {"beat": 16, "ko": "노랑나비 흰나비", "en": "Yellow one, white one"},
+            {"beat": 24, "ko": "춤을 추며 오너라", "en": "Come dancing through the air"},
+            {"beat": 32, "ko": "나비야 나비야", "en": "Butterfly, butterfly"},
+            {"beat": 40, "ko": "이리 날아오너라", "en": "Come flying over here"},
+            {"beat": 48, "ko": "노랑나비 흰나비", "en": "Yellow one, white one"},
+            {"beat": 56, "ko": "춤을 추며 오너라", "en": "Come dancing through the air"},
         ],
     },
     {
@@ -305,24 +322,24 @@ SONGS = [
         "style": "play",
         "perc": True,
         "notes": (
-            "G4e A4e G4e E4q G4e A4e G4e E4q "
-            "C5e C5e D5e E5q D5e C5q. "
-            "G4e A4e G4e E4q G4e A4e G4e E4q "
-            "C4e D4e E4q D4e C4h "
-            "G4e A4e G4e E4q G4e A4e G4e E4q "
-            "C5e C5e D5e E5q D5e C5q. "
-            "G4e A4e G4e E4q G4e A4e G4e E4q "
-            "C4e D4e E4q D4e C4h"
+            "G4q A4q G4q E4q G4q A4q G4q E4q "
+            "C5q C5q A4q G4q E4q D4q C4h "
+            "G4q A4q G4q E4q G4q A4q G4q E4q "
+            "E4q D4q C4q D4q C4w "
+            "G4q A4q G4q E4q G4q A4q G4q E4q "
+            "C5q C5q A4q G4q E4q D4q C4h "
+            "G4q A4q G4q E4q G4q A4q G4q E4q "
+            "E4q D4q C4q D4q C4w"
         ),
         "lines": [
             {"beat": 0, "ko": "나리나리 개나리", "en": "Nari nari, forsythia"},
-            {"beat": 6, "ko": "입에 따다 물고요", "en": "Pick a bloom and hold it close"},
-            {"beat": 12, "ko": "병아리떼 하영하영", "en": "Little chicks go yellow-yellow"},
-            {"beat": 18, "ko": "봄나들이 가요", "en": "Off we go for a springtime walk"},
-            {"beat": 26, "ko": "나리나리 개나리", "en": "Nari nari, forsythia"},
-            {"beat": 32, "ko": "노란 꽃이 피었네", "en": "Yellow blossoms everywhere"},
-            {"beat": 38, "ko": "병아리떼 하영하영", "en": "Little chicks go yellow-yellow"},
-            {"beat": 44, "ko": "봄나들이 가요", "en": "Off we go for a springtime walk"},
+            {"beat": 8, "ko": "입에 따다 물고요", "en": "Pick a bloom and hold it close"},
+            {"beat": 16, "ko": "병아리떼 하영하영", "en": "Little chicks go yellow-yellow"},
+            {"beat": 24, "ko": "봄나들이 가요", "en": "Off we go for a springtime walk"},
+            {"beat": 32, "ko": "나리나리 개나리", "en": "Nari nari, forsythia"},
+            {"beat": 40, "ko": "노란 꽃이 피었네", "en": "Yellow blossoms everywhere"},
+            {"beat": 48, "ko": "병아리떼 하영하영", "en": "Little chicks go yellow-yellow"},
+            {"beat": 56, "ko": "봄나들이 가요", "en": "Off we go for a springtime walk"},
         ],
     },
     {
@@ -366,7 +383,7 @@ SONGS = [
         "category": "play",
         "color": "#FFD7B8",
         "accent": "#F0A05A",
-        "bpm": 118,
+        "bpm": 100,
         "style": "play",
         "perc": True,
         "notes": (
@@ -381,13 +398,13 @@ SONGS = [
         ),
         "lines": [
             {"beat": 0, "ko": "여우야 여우야 뭐하니", "en": "Fox, fox, what are you doing"},
-            {"beat": 6, "ko": "잠잔다", "en": "I'm sleeping"},
-            {"beat": 12, "ko": "뭐 잡으러 왔니", "en": "What did you come to catch"},
-            {"beat": 18, "ko": "토끼 잡으러 왔다", "en": "I came to catch a bunny"},
-            {"beat": 26, "ko": "여우야 여우야 뭐하니", "en": "Fox, fox, what are you doing"},
-            {"beat": 32, "ko": "잠잔다", "en": "I'm sleeping"},
-            {"beat": 38, "ko": "뭐 잡으러 왔니", "en": "What did you come to catch"},
-            {"beat": 44, "ko": "토끼 잡으러 왔다", "en": "I came to catch a bunny"},
+            {"beat": 4, "ko": "잠잔다", "en": "I'm sleeping"},
+            {"beat": 8, "ko": "뭐 잡으러 왔니", "en": "What did you come to catch"},
+            {"beat": 12, "ko": "토끼 잡으러 왔다", "en": "I came to catch a bunny"},
+            {"beat": 16, "ko": "여우야 여우야 뭐하니", "en": "Fox, fox, what are you doing"},
+            {"beat": 20, "ko": "잠잔다", "en": "I'm sleeping"},
+            {"beat": 24, "ko": "뭐 잡으러 왔니", "en": "What did you come to catch"},
+            {"beat": 28, "ko": "토끼 잡으러 왔다", "en": "I came to catch a bunny"},
         ],
     },
     {
@@ -399,7 +416,7 @@ SONGS = [
         "category": "play",
         "color": "#FFF3B0",
         "accent": "#E8C84A",
-        "bpm": 112,
+        "bpm": 96,
         "style": "play",
         "perc": True,
         "notes": (
@@ -507,13 +524,13 @@ SONGS = [
         ),
         "lines": [
             {"beat": 0, "ko": "노를 저어라 노를 저어라", "en": "Row, row, row your boat"},
-            {"beat": 8, "ko": "강을 따라가요", "en": "Gently down the stream"},
-            {"beat": 16, "ko": "즐겁게 즐겁게 즐겁게 즐겁게", "en": "Merrily, merrily, merrily, merrily"},
-            {"beat": 22, "ko": "인생은 꿈같아요", "en": "Life is but a dream"},
-            {"beat": 30, "ko": "노를 저어라 노를 저어라", "en": "Row, row, row your boat"},
-            {"beat": 38, "ko": "강을 따라가요", "en": "Gently down the stream"},
-            {"beat": 46, "ko": "즐겁게 즐겁게 즐겁게 즐겁게", "en": "Merrily, merrily, merrily, merrily"},
-            {"beat": 52, "ko": "인생은 꿈같아요", "en": "Life is but a dream"},
+            {"beat": 6, "ko": "강을 따라가요", "en": "Gently down the stream"},
+            {"beat": 12, "ko": "즐겁게 즐겁게 즐겁게 즐겁게", "en": "Merrily, merrily, merrily, merrily"},
+            {"beat": 18, "ko": "인생은 꿈같아요", "en": "Life is but a dream"},
+            {"beat": 24, "ko": "노를 저어라 노를 저어라", "en": "Row, row, row your boat"},
+            {"beat": 30, "ko": "강을 따라가요", "en": "Gently down the stream"},
+            {"beat": 36, "ko": "즐겁게 즐겁게 즐겁게 즐겁게", "en": "Merrily, merrily, merrily, merrily"},
+            {"beat": 42, "ko": "인생은 꿈같아요", "en": "Life is but a dream"},
         ],
     },
     {
@@ -561,23 +578,23 @@ SONGS = [
         "perc": True,
         "notes": (
             "G4q G4q G4q D4q E4q E4q D4h "
-            "B4q B4q A4q A4q G4h Restq "
-            "D4e D4e G4q D4e D4e G4q "
-            "G4e G4e G4e G4e G4e G4e G4q "
+            "B4q B4q A4q A4q G4w "
             "G4q G4q G4q D4q E4q E4q D4h "
-            "B4q B4q A4q A4q G4h Restq "
+            "B4q B4q A4q A4q G4w "
             "G4q G4q G4q D4q E4q E4q D4h "
-            "B4q B4q A4q A4q G4h"
+            "B4q B4q A4q A4q G4w "
+            "G4q G4q G4q D4q E4q E4q D4h "
+            "B4q B4q A4q A4q G4w"
         ),
         "lines": [
             {"beat": 0, "ko": "올드 맥도널드 농장에", "en": "Old MacDonald had a farm"},
             {"beat": 8, "ko": "이아이오", "en": "E-I-E-I-O"},
-            {"beat": 14, "ko": "그 농장에 병아리가", "en": "And on that farm he had a chick"},
-            {"beat": 22, "ko": "짹짹짹짹 이아이오", "en": "E-I-E-I-O"},
-            {"beat": 30, "ko": "짹짹 여기 짹짹 저기", "en": "With a chick-chick here and there"},
-            {"beat": 38, "ko": "여기저기 짹짹짹", "en": "Here a chick, there a chick"},
-            {"beat": 46, "ko": "올드 맥도널드 농장에", "en": "Old MacDonald had a farm"},
-            {"beat": 54, "ko": "이아이오", "en": "E-I-E-I-O"},
+            {"beat": 16, "ko": "그 농장에 병아리가", "en": "And on that farm he had a chick"},
+            {"beat": 24, "ko": "이아이오", "en": "E-I-E-I-O"},
+            {"beat": 32, "ko": "짹짹 여기 짹짹 저기", "en": "With a chick-chick here and there"},
+            {"beat": 40, "ko": "여기저기 짹짹짹", "en": "Here a chick, there a chick"},
+            {"beat": 48, "ko": "올드 맥도널드 농장에", "en": "Old MacDonald had a farm"},
+            {"beat": 56, "ko": "이아이오", "en": "E-I-E-I-O"},
         ],
     },
     {
@@ -623,26 +640,24 @@ SONGS = [
         "bpm": 94,
         "style": "play",
         "notes": (
-            "G4e C5e C5e C5e D5e E5q E5q "
-            "E5e D5e C5e D5e E5q C5h "
-            "G5q E5q C5q G4h "
-            "G4e C5e C5e C5e D5e E5q E5q "
-            "E5e D5e C5e D5e E5q C5h "
-            "G4e C5e C5e C5e D5e E5q E5q "
-            "E5e D5e C5e D5e E5q C5h "
-            "G5q E5q C5q G4h "
-            "G4e C5e C5e C5e D5e E5q E5q "
-            "E5e D5e C5e D5e E5q C5h"
+            "C4q C4q C4q D4q E4q D4q C4h "
+            "E4q D4q C4q D4q E4q C4h Restq "
+            "G4q E4q C4q G3q C4w "
+            "C4q C4q C4q D4q E4q D4q C4h "
+            "C4q C4q C4q D4q E4q D4q C4h "
+            "E4q D4q C4q D4q E4q C4h Restq "
+            "G4q E4q C4q G3q C4w "
+            "C4q C4q C4q D4q E4q D4q C4h"
         ),
         "lines": [
             {"beat": 0, "ko": "아기 거미가 줄 타고 올라가요", "en": "The itsy bitsy spider climbed up the spout"},
             {"beat": 8, "ko": "비가 와서 거미를 씻겨 내렸죠", "en": "Down came the rain and washed the spider out"},
             {"beat": 16, "ko": "해가 나와 빗물을 말리고", "en": "Out came the sun and dried up all the rain"},
-            {"beat": 22, "ko": "아기 거미 다시 올라가요", "en": "And the itsy bitsy spider climbed up again"},
-            {"beat": 30, "ko": "아기 거미가 줄 타고 올라가요", "en": "The itsy bitsy spider climbed up the spout"},
-            {"beat": 38, "ko": "비가 와서 거미를 씻겨 내렸죠", "en": "Down came the rain and washed the spider out"},
-            {"beat": 46, "ko": "해가 나와 빗물을 말리고", "en": "Out came the sun and dried up all the rain"},
-            {"beat": 52, "ko": "아기 거미 다시 올라가요", "en": "And the itsy bitsy spider climbed up again"},
+            {"beat": 24, "ko": "아기 거미 다시 올라가요", "en": "And the itsy bitsy spider climbed up again"},
+            {"beat": 32, "ko": "아기 거미가 줄 타고 올라가요", "en": "The itsy bitsy spider climbed up the spout"},
+            {"beat": 40, "ko": "비가 와서 거미를 씻겨 내렸죠", "en": "Down came the rain and washed the spider out"},
+            {"beat": 48, "ko": "해가 나와 빗물을 말리고", "en": "Out came the sun and dried up all the rain"},
+            {"beat": 56, "ko": "아기 거미 다시 올라가요", "en": "And the itsy bitsy spider climbed up again"},
         ],
     },
     {
@@ -654,24 +669,24 @@ SONGS = [
         "category": "animal",
         "color": "#C8F0FF",
         "accent": "#5EC4E8",
-        "bpm": 116,
+        "bpm": 96,
         "style": "play",
         "perc": True,
         "notes": (
-            "G4q A4q G4q E4q G4q A4q G4h "
-            "C5q A4q G4q E4q D4q E4q C4h "
-            "G4q A4q G4q E4q G4q A4q G4h "
-            "C5q A4q G4q E4q D4q E4q C4h "
-            "G4q A4q G4q E4q G4q A4q G4h "
-            "C5q A4q G4q E4q D4q E4q C4h"
+            "E4q E4q D4q C4q D4q E4q E4h "
+            "D4q D4q E4q D4q C4w "
+            "E4q E4q D4q C4q D4q E4q E4h "
+            "D4q D4q E4q D4q C4w "
+            "E4q E4q D4q C4q D4q E4q E4h "
+            "D4q D4q E4q D4q C4w"
         ),
         "lines": [
             {"beat": 0, "ko": "새야새야 파랑새야", "en": "Bird, bird, little blue bird"},
             {"beat": 8, "ko": "녹두밭에 앉지 마라", "en": "Don't sit in the bean field"},
             {"beat": 16, "ko": "새야새야 노랑새야", "en": "Bird, bird, little yellow bird"},
-            {"beat": 24, "ko": "노래하며 날아가자", "en": "Sing and fly away with me"},
-            {"beat": 32, "ko": "짹짹짹짹 노래해요", "en": "Tweet tweet, sing a song"},
-            {"beat": 40, "ko": "하늘 높이 날아가요", "en": "Fly up high into the sky"},
+            {"beat": 24, "ko": "청포장수 울고 간다", "en": "The cloth seller starts to cry"},
+            {"beat": 32, "ko": "새야새야 파랑새야", "en": "Bird, bird, little blue bird"},
+            {"beat": 40, "ko": "노래하며 날아가자", "en": "Sing and fly away with me"},
         ],
     },
     {
@@ -714,28 +729,24 @@ SONGS = [
         "category": "play",
         "color": "#FFE0F0",
         "accent": "#F08AB8",
-        "bpm": 120,
+        "bpm": 104,
         "style": "play",
         "perc": True,
         "notes": (
-            "C5q C5q A4q A4q G4q E4q G4h "
-            "C5q C5q A4q A4q G4q E4q C4h "
-            "G4q G4q E4q E4q G4q A4q G4h "
-            "C5q A4q G4q E4q D4q E4q C4h "
-            "C5q C5q A4q A4q G4q E4q G4h "
-            "C5q C5q A4q A4q G4q E4q C4h "
-            "G4q G4q E4q E4q G4q A4q G4h "
-            "C5q A4q G4q E4q D4q E4q C4h"
+            "G4q E4q G4q E4q G4q A4q C5q G4q "
+            "G4q E4q G4q E4q D4w "
+            "G4q A4q G4q E4q D4q E4q C4h "
+            "G4q E4q G4q E4q G4q A4q C5q G4q "
+            "G4q E4q G4q E4q D4w "
+            "G4q A4q G4q E4q D4q E4q C4h"
         ),
         "lines": [
-            {"beat": 0, "ko": "둥글게 둥글게", "en": "Round and round we go"},
-            {"beat": 8, "ko": "둥글게 둥글게", "en": "Round and round we go"},
-            {"beat": 16, "ko": "빙글빙글 돌아가며", "en": "Spinning, spinning, dancing"},
-            {"beat": 24, "ko": "춤을 춥시다", "en": "Let's dance together"},
-            {"beat": 32, "ko": "손뼉을 치면서", "en": "Clap your hands with me"},
-            {"beat": 40, "ko": "발도 구르면서", "en": "Stamp your feet with me"},
-            {"beat": 48, "ko": "다 같이 웃으며", "en": "Everybody smiling"},
-            {"beat": 56, "ko": "돌아가요", "en": "Round we go"},
+            {"beat": 0, "ko": "둥글게 둥글게 둥글게", "en": "Round and round and round"},
+            {"beat": 8, "ko": "빙글빙글 돌아가며", "en": "Spinning, spinning around"},
+            {"beat": 16, "ko": "춤을 춥시다", "en": "Let's dance together"},
+            {"beat": 24, "ko": "둥글게 둥글게 둥글게", "en": "Round and round and round"},
+            {"beat": 32, "ko": "빙글빙글 돌아가며", "en": "Spinning, spinning around"},
+            {"beat": 40, "ko": "춤을 춥시다", "en": "Let's dance together"},
         ],
     },
     {
@@ -788,7 +799,7 @@ SONGS = [
             "C4q C4e D4e C4q E4h "
             "C4q C4e D4e C4q F4h "
             "G4q E4q C4q A4q "
-            "G4e F4e E4e D4e C4h"
+            "G4e F4e E4e D4e C4h Restq Restq"
         ),
         "lines": [
             {"beat": 0, "ko": "째깍째깍 시계", "en": "Hickory dickory dock"},
@@ -810,14 +821,14 @@ SONGS = [
         "category": "play",
         "color": "#FFE6C8",
         "accent": "#F0A05A",
-        "bpm": 122,
+        "bpm": 104,
         "style": "play",
         "perc": True,
         "notes": (
-            "C5q C5q G4q G4q A4q A4q G4h "
+            "C4q C4q G4q G4q A4q A4q G4h "
             "F4q F4q E4q E4q D4q D4q C4h "
             "G4q G4q F4q F4q E4q E4q D4h "
-            "C5q C5q G4q G4q A4q A4q G4h "
+            "C4q C4q G4q G4q A4q A4q G4h "
             "F4q F4q E4q E4q D4q D4q C4h"
         ),
         "lines": [
@@ -837,15 +848,15 @@ SONGS = [
         "category": "play",
         "color": "#FFF4A8",
         "accent": "#F0C43A",
-        "bpm": 118,
+        "bpm": 100,
         "style": "play",
         "perc": True,
         "notes": (
-            "C5q D5q E5q C5q G4q A4q G4h "
-            "C5q D5q E5q C5q G4q E4q C4h "
+            "C4q D4q E4q C4q G4q A4q G4h "
+            "C4q D4q E4q C4q G4q E4q C4h "
             "G4q G4q A4q G4q E4q D4q C4h "
-            "C5q D5q E5q C5q G4q A4q G4h "
-            "C5q D5q E5q C5q G4q E4q C4h"
+            "C4q D4q E4q C4q G4q A4q G4h "
+            "C4q D4q E4q C4q G4q E4q C4h"
         ),
         "lines": [
             {"beat": 0, "ko": "햇님 햇님 방긋방긋", "en": "Sunshine, sunshine, smile at me"},
@@ -896,14 +907,14 @@ SONGS = [
         "category": "play",
         "color": "#FFE4C8",
         "accent": "#F0A05A",
-        "bpm": 124,
+        "bpm": 104,
         "style": "play",
         "perc": True,
         "notes": (
-            "C5q C5q G4q G4q A4q A4q G4h "
+            "C4q C4q G4q G4q A4q A4q G4h "
             "F4q F4q E4q E4q D4q D4q C4h "
             "G4q G4q F4q F4q E4q E4q D4h "
-            "C5q C5q G4q G4q A4q A4q G4h "
+            "C4q C4q G4q G4q A4q A4q G4h "
             "F4q F4q E4q E4q D4q D4q C4h"
         ),
         "lines": [
@@ -923,16 +934,16 @@ SONGS = [
         "category": "play",
         "color": "#E4F4C8",
         "accent": "#88C46A",
-        "bpm": 128,
+        "bpm": 108,
         "style": "play",
         "perc": True,
         "notes": (
-            "E5q E5q C5q C5q D5q D5q G4h "
-            "E5q E5q C5q C5q D5q B4q C5h "
+            "E4q E4q C4q C4q D4q D4q G3h "
+            "E4q E4q C4q C4q D4q B3q C4h "
             "G4q A4q G4q E4q G4q A4q G4h "
-            "E5q E5q C5q C5q D5q B4q C5h "
-            "E5q E5q C5q C5q D5q D5q G4h "
-            "E5q E5q C5q C5q D5q B4q C5h"
+            "E4q E4q C4q C4q D4q B3q C4h "
+            "E4q E4q C4q C4q D4q D4q G3h "
+            "E4q E4q C4q C4q D4q B3q C4h"
         ),
         "lines": [
             {"beat": 0, "ko": "깡충깡충 토끼가", "en": "Hop hop hop goes bunny"},
@@ -944,34 +955,34 @@ SONGS = [
         ],
     },
     {
-        "id": "muffin-man",
-        "titleKo": "머핀 아저씨",
-        "titleEn": "The Muffin Man",
-        "emoji": "🧁",
-        "category": "daily",
-        "color": "#F8D8E4",
-        "accent": "#E090B0",
-        "bpm": 98,
-        "style": "play",
+        "id": "brahms",
+        "titleKo": "브람스 자장가",
+        "titleEn": "Brahms' Lullaby",
+        "emoji": "🌙",
+        "category": "lullaby",
+        "color": "#D9D4F7",
+        "accent": "#9B90D8",
+        "bpm": 72,
+        "style": "lullaby",
         "notes": (
-            "C4q D4q E4q F4q G4h E4h "
-            "G4e A4e G4e F4e E4q C4q D4h G3h "
-            "C4q D4q E4q F4q G4h E4h "
-            "G4q G4q D4q E4q C4w "
-            "C4q D4q E4q F4q G4h E4h "
-            "G4e A4e G4e F4e E4q C4q D4h G3h "
-            "C4q D4q E4q F4q G4h E4h "
-            "G4q G4q D4q E4q C4w"
+            "E4e E4e G4h E4e E4e G4h "
+            "E4e G4e C5h B4q A4h "
+            "D4e D4e F4h D4e D4e F4h "
+            "D4e F4e B4h A4q G4h "
+            "E4e E4e G4h E4e E4e G4h "
+            "E4e G4e C5h B4q A4h "
+            "A4e F4e G4h F4e F4e G4h "
+            "D4e F4e B4q A4e G4e F4e E4e D4e C4h"
         ),
         "lines": [
-            {"beat": 0, "ko": "머핀 아저씨 아시나요", "en": "Do you know the muffin man"},
-            {"beat": 8, "ko": "드루리 레인에 사는", "en": "The muffin man, the muffin man"},
-            {"beat": 16, "ko": "머핀 아저씨 아시나요", "en": "Do you know the muffin man"},
-            {"beat": 24, "ko": "드루리 레인에 살죠", "en": "Who lives on Drury Lane"},
-            {"beat": 32, "ko": "네 알아요 머핀 아저씨", "en": "Yes I know the muffin man"},
-            {"beat": 40, "ko": "드루리 레인에 사는", "en": "The muffin man, the muffin man"},
-            {"beat": 48, "ko": "네 알아요 머핀 아저씨", "en": "Yes I know the muffin man"},
-            {"beat": 56, "ko": "드루리 레인에 살죠", "en": "Who lives on Drury Lane"},
+            {"beat": 0, "ko": "잘 자렴 아기야", "en": "Lullaby, and good night"},
+            {"beat": 6, "ko": "엄마 품에서", "en": "With roses bedight"},
+            {"beat": 12, "ko": "별이 반짝이면", "en": "With lilies o'er spread"},
+            {"beat": 18, "ko": "꿈나라로 가요", "en": "Is baby's wee bed"},
+            {"beat": 24, "ko": "잘 자렴 아기야", "en": "Lullaby, and good night"},
+            {"beat": 30, "ko": "포근한 자장가", "en": "Thy mother's delight"},
+            {"beat": 36, "ko": "달빛 아래 살며시", "en": "Lay thee down now and rest"},
+            {"beat": 42, "ko": "눈을 감아요", "en": "May thy slumber be blessed"},
         ],
     },
     {
@@ -1136,7 +1147,7 @@ SONGS = [
         "category": "play",
         "color": "#F6D0D4",
         "accent": "#E08090",
-        "bpm": 120,
+        "bpm": 100,
         "style": "play",
         "perc": True,
         "notes": (
@@ -1164,6 +1175,13 @@ def main() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     catalog = []
     for i, song in enumerate(SONGS, 1):
+        notes = parse_notes(song["notes"])
+        total_beats = sum(d for _, d in notes)
+        beats = [float(line["beat"]) for line in song["lines"]]
+        if beats != sorted(beats) or beats[0] != 0:
+            raise ValueError(f"{song['id']} lyric beats must start at 0 and increase")
+        if beats[-1] >= total_beats:
+            raise ValueError(f"{song['id']} last lyric {beats[-1]} >= {total_beats} beats")
         wav, lyrics, duration = render_song(song)
         dest = AUDIO_DIR / f"{song['id']}.mp3"
         wav_to_mp3(wav, dest)
@@ -1178,11 +1196,11 @@ def main() -> None:
                 "korean": bool(song.get("korean")),
                 "color": song["color"],
                 "accent": song["accent"],
-                "bpm": max(int(round(song["bpm"] * 1.22)), 112),
+                "bpm": song_bpm(song),
                 "audio": f"/audio/{song['id']}.mp3",
                 "duration": round(duration, 2),
                 "lyrics": lyrics,
-                "source": "전래·퍼블릭 도메인 동요 · 밝은 실로폰 편곡",
+                "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡",
             }
         )
         print(f"{i:02d} {song['id']:16s} {duration:6.1f}s  {song['titleKo']}")
