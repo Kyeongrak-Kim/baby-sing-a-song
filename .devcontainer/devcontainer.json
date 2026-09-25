@@ -1,0 +1,14 @@
+{
+  "name": "아기 동요",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "forwardPorts": [4173],
+  "portsAttributes": {
+    "4173": {
+      "label": "아기 동요",
+      "onAutoForward": "notify",
+      "visibility": "public"
+    }
+  },
+  "postCreateCommand": "npm install && npm run build",
+  "postStartCommand": "bash .devcontainer/start-preview.sh"
+}

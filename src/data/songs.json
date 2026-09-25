@@ -62,7 +62,7 @@
         "en": "How I wonder what you are"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "butterfly",
@@ -76,123 +76,111 @@
     "accent": "#B79BE8",
     "bpm": 96,
     "audio": "/audio/butterfly.mp3",
-    "duration": 39.77,
+    "duration": 68.52,
     "lyrics": [
       {
         "start": 0.32,
-        "end": 5.32,
-        "ko": "나비야 나비야",
-        "en": "Butterfly, butterfly"
+        "end": 8.445,
+        "ko": "나비야 나비야 이리 날아오너라",
+        "en": "Butterfly, butterfly, come flying over"
       },
       {
-        "start": 5.32,
-        "end": 10.32,
-        "ko": "이리 날아오너라",
-        "en": "Come flying over here"
+        "start": 8.445,
+        "end": 17.195,
+        "ko": "노랑나비 흰나비 춤을 추며 오너라",
+        "en": "Yellow butterfly, white butterfly, come dancing"
       },
       {
-        "start": 10.32,
-        "end": 15.32,
-        "ko": "노랑나비 흰나비",
-        "en": "Yellow one, white one"
+        "start": 17.195,
+        "end": 25.945,
+        "ko": "봄바람에 꽃잎도 방긋방긋 웃으며",
+        "en": "Petals in the spring breeze, smiling"
       },
       {
-        "start": 15.32,
-        "end": 20.32,
-        "ko": "춤을 추며 오너라",
-        "en": "Come dancing through the air"
+        "start": 25.945,
+        "end": 34.07,
+        "ko": "참새도 짹짹짹 노래하며 춤춘다",
+        "en": "Sparrows tweet and dance along"
       },
       {
-        "start": 20.32,
-        "end": 25.32,
-        "ko": "나비야 나비야",
-        "en": "Butterfly, butterfly"
+        "start": 34.07,
+        "end": 42.195,
+        "ko": "나비야 나비야 이리 날아오너라",
+        "en": "Butterfly, butterfly, come flying over"
       },
       {
-        "start": 25.32,
-        "end": 30.32,
-        "ko": "이리 날아오너라",
-        "en": "Come flying over here"
+        "start": 42.195,
+        "end": 50.945,
+        "ko": "노랑나비 흰나비 춤을 추며 오너라",
+        "en": "Yellow butterfly, white butterfly, come dancing"
       },
       {
-        "start": 30.32,
-        "end": 35.32,
-        "ko": "노랑나비 흰나비",
-        "en": "Yellow one, white one"
+        "start": 50.945,
+        "end": 59.695,
+        "ko": "봄바람에 꽃잎도 방긋방긋 웃으며",
+        "en": "Petals in the spring breeze, smiling"
       },
       {
-        "start": 35.32,
-        "end": 39.07,
-        "ko": "춤을 추며 오너라",
-        "en": "Come dancing through the air"
+        "start": 59.695,
+        "end": 67.82,
+        "ko": "참새도 짹짹짹 노래하며 춤춘다",
+        "en": "Sparrows tweet and dance along"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
-    "id": "forsythia",
+    "id": "arirang",
     "no": 3,
-    "titleKo": "나리나리 개나리",
-    "titleEn": "Nari Nari Forsythia",
-    "emoji": "🌼",
-    "category": "play",
+    "titleKo": "아리랑",
+    "titleEn": "Arirang",
+    "emoji": "⛰️",
+    "category": "story",
     "korean": true,
     "color": "#FBE7A8",
     "accent": "#E8C85A",
-    "bpm": 100,
-    "audio": "/audio/forsythia.mp3",
-    "duration": 39.42,
+    "bpm": 88,
+    "audio": "/audio/arirang.mp3",
+    "duration": 50.11,
     "lyrics": [
       {
         "start": 0.32,
-        "end": 5.12,
-        "ko": "나리나리 개나리",
-        "en": "Nari nari, forsythia"
+        "end": 8.502,
+        "ko": "아리랑 아리랑 아라리요",
+        "en": "Arirang, arirang, arariyo"
       },
       {
-        "start": 5.12,
-        "end": 9.92,
-        "ko": "입에 따다 물고요",
-        "en": "Pick a bloom and hold it close"
+        "start": 8.502,
+        "end": 16.684,
+        "ko": "아리랑 고개로 넘어간다",
+        "en": "Going over Arirang hill"
       },
       {
-        "start": 9.92,
-        "end": 14.72,
-        "ko": "병아리떼 하영하영",
-        "en": "Little chicks go yellow-yellow"
+        "start": 16.684,
+        "end": 24.865,
+        "ko": "나를 버리고 가시는 님은",
+        "en": "My love, you are leaving me"
       },
       {
-        "start": 14.72,
-        "end": 19.52,
-        "ko": "봄나들이 가요",
-        "en": "Off we go for a springtime walk"
+        "start": 24.865,
+        "end": 33.047,
+        "ko": "십리도 못 가서 발병 난다",
+        "en": "Your feet will hurt before ten li"
       },
       {
-        "start": 19.52,
-        "end": 24.32,
-        "ko": "나리나리 개나리",
-        "en": "Nari nari, forsythia"
+        "start": 33.047,
+        "end": 41.229,
+        "ko": "아리랑 아리랑 아라리요",
+        "en": "Arirang, arirang, arariyo"
       },
       {
-        "start": 24.32,
-        "end": 29.12,
-        "ko": "노란 꽃이 피었네",
-        "en": "Yellow blossoms everywhere"
-      },
-      {
-        "start": 29.12,
-        "end": 33.92,
-        "ko": "병아리떼 하영하영",
-        "en": "Little chicks go yellow-yellow"
-      },
-      {
-        "start": 33.92,
-        "end": 38.72,
-        "ko": "봄나들이 가요",
-        "en": "Off we go for a springtime walk"
+        "start": 41.229,
+        "end": 49.411,
+        "ko": "아리랑 고개로 넘어간다",
+        "en": "Going over Arirang hill"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "brother-john",
@@ -257,7 +245,7 @@
         "en": "Ding ding dong, ding ding dong"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "fox",
@@ -269,60 +257,66 @@
     "korean": true,
     "color": "#FFD7B8",
     "accent": "#F0A05A",
-    "bpm": 100,
+    "bpm": 96,
     "audio": "/audio/fox.mp3",
-    "duration": 20.22,
+    "duration": 29.14,
     "lyrics": [
       {
         "start": 0.32,
-        "end": 2.72,
+        "end": 5.945,
         "ko": "여우야 여우야 뭐하니",
         "en": "Fox, fox, what are you doing"
       },
       {
-        "start": 2.72,
-        "end": 5.12,
+        "start": 5.945,
+        "end": 7.82,
         "ko": "잠잔다",
         "en": "I'm sleeping"
       },
       {
-        "start": 5.12,
-        "end": 7.52,
-        "ko": "뭐 잡으러 왔니",
-        "en": "What did you come to catch"
+        "start": 7.82,
+        "end": 9.695,
+        "ko": "잠꾸러기",
+        "en": "Sleepyhead"
       },
       {
-        "start": 7.52,
-        "end": 9.92,
-        "ko": "토끼 잡으러 왔다",
-        "en": "I came to catch a bunny"
-      },
-      {
-        "start": 9.92,
-        "end": 12.32,
+        "start": 9.695,
+        "end": 15.32,
         "ko": "여우야 여우야 뭐하니",
         "en": "Fox, fox, what are you doing"
       },
       {
-        "start": 12.32,
-        "end": 14.72,
+        "start": 15.32,
+        "end": 17.195,
+        "ko": "세수한다",
+        "en": "Washing my face"
+      },
+      {
+        "start": 17.195,
+        "end": 19.07,
+        "ko": "멋쟁이",
+        "en": "Looking fancy"
+      },
+      {
+        "start": 19.07,
+        "end": 24.695,
+        "ko": "여우야 여우야 뭐하니",
+        "en": "Fox, fox, what are you doing"
+      },
+      {
+        "start": 24.695,
+        "end": 26.57,
         "ko": "잠잔다",
         "en": "I'm sleeping"
       },
       {
-        "start": 14.72,
-        "end": 17.12,
-        "ko": "뭐 잡으러 왔니",
-        "en": "What did you come to catch"
-      },
-      {
-        "start": 17.12,
-        "end": 19.52,
-        "ko": "토끼 잡으러 왔다",
-        "en": "I came to catch a bunny"
+        "start": 26.57,
+        "end": 28.445,
+        "ko": "잠꾸러기",
+        "en": "Sleepyhead"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "moon",
@@ -334,60 +328,48 @@
     "korean": true,
     "color": "#FFF3B0",
     "accent": "#E8C84A",
-    "bpm": 96,
+    "bpm": 92,
     "audio": "/audio/moon.mp3",
-    "duration": 41.02,
+    "duration": 32.32,
     "lyrics": [
       {
         "start": 0.32,
-        "end": 5.32,
-        "ko": "달아달아 밝은 달아",
+        "end": 5.537,
+        "ko": "달아 달아 밝은 달아",
         "en": "Moon, moon, bright moon"
       },
       {
-        "start": 5.32,
-        "end": 10.32,
+        "start": 5.537,
+        "end": 10.755,
         "ko": "이태백이 놀던 달아",
-        "en": "The moon where poets played"
+        "en": "The moon where Li Bai played"
       },
       {
-        "start": 10.32,
-        "end": 15.32,
+        "start": 10.755,
+        "end": 15.972,
         "ko": "저기 저기 저 달 속에",
-        "en": "Look, look inside that moon"
+        "en": "There, there, inside that moon"
       },
       {
-        "start": 15.32,
-        "end": 20.32,
+        "start": 15.972,
+        "end": 21.19,
         "ko": "계수나무 박혔으니",
         "en": "A cinnamon tree is growing"
       },
       {
-        "start": 20.32,
-        "end": 25.32,
-        "ko": "달아달아 밝은 달아",
-        "en": "Moon, moon, bright moon"
+        "start": 21.19,
+        "end": 26.407,
+        "ko": "옥도끼로 찍어 내어",
+        "en": "Chop it out with a jade axe"
       },
       {
-        "start": 25.32,
-        "end": 30.32,
-        "ko": "방긋방긋 웃어라",
-        "en": "Smile a great big smile"
-      },
-      {
-        "start": 30.32,
-        "end": 35.32,
-        "ko": "아기랑 손뼉 치며",
-        "en": "Clap along with baby"
-      },
-      {
-        "start": 35.32,
-        "end": 40.32,
-        "ko": "둥실둥실 떠요",
-        "en": "Float up, float up high"
+        "start": 26.407,
+        "end": 31.624,
+        "ko": "금도끼로 다듬어서",
+        "en": "Trim it with a golden axe"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "mary-lamb",
@@ -452,7 +434,7 @@
         "en": "To see a lamb at school"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "black-sheep",
@@ -511,7 +493,7 @@
         "en": "Who lives down the lane"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "row-boat",
@@ -576,7 +558,7 @@
         "en": "Life is but a dream"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "london-bridge",
@@ -641,7 +623,7 @@
         "en": "My fair lady"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "old-macdonald",
@@ -706,7 +688,7 @@
         "en": "E-I-E-I-O"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "bingo",
@@ -771,7 +753,7 @@
         "en": "And Bingo was his name-o"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "itsy-spider",
@@ -836,7 +818,7 @@
         "en": "And the itsy bitsy spider climbed up again"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "bird",
@@ -855,7 +837,7 @@
       {
         "start": 0.32,
         "end": 5.32,
-        "ko": "새야새야 파랑새야",
+        "ko": "새야 새야 파랑새야",
         "en": "Bird, bird, little blue bird"
       },
       {
@@ -867,29 +849,29 @@
       {
         "start": 10.32,
         "end": 15.32,
-        "ko": "새야새야 노랑새야",
-        "en": "Bird, bird, little yellow bird"
+        "ko": "녹두꽃이 떨어지면",
+        "en": "If the mung flowers fall"
       },
       {
         "start": 15.32,
         "end": 20.32,
         "ko": "청포장수 울고 간다",
-        "en": "The cloth seller starts to cry"
+        "en": "The jelly seller starts to cry"
       },
       {
         "start": 20.32,
         "end": 25.32,
-        "ko": "새야새야 파랑새야",
+        "ko": "새야 새야 파랑새야",
         "en": "Bird, bird, little blue bird"
       },
       {
         "start": 25.32,
         "end": 30.32,
-        "ko": "노래하며 날아가자",
-        "en": "Sing and fly away with me"
+        "ko": "녹두밭에 앉지 마라",
+        "en": "Don't sit in the bean field"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "little-dog",
@@ -954,60 +936,96 @@
         "en": "Oh where, oh where can he be"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
-    "id": "circle",
+    "id": "ganggang",
     "no": 16,
-    "titleKo": "둥글게 둥글게",
-    "titleEn": "Round and Round",
-    "emoji": "⭕",
+    "titleKo": "강강술래",
+    "titleEn": "Ganggangsullae",
+    "emoji": "🌕",
     "category": "play",
     "korean": true,
     "color": "#FFE0F0",
     "accent": "#F08AB8",
-    "bpm": 104,
-    "audio": "/audio/circle.mp3",
-    "duration": 28.71,
+    "bpm": 96,
+    "audio": "/audio/ganggang.mp3",
+    "duration": 31.02,
     "lyrics": [
       {
         "start": 0.32,
-        "end": 4.935,
-        "ko": "둥글게 둥글게 둥글게",
-        "en": "Round and round and round"
+        "end": 2.82,
+        "ko": "달 떠온다",
+        "en": "The moon is rising"
       },
       {
-        "start": 4.935,
-        "end": 9.551,
-        "ko": "빙글빙글 돌아가며",
-        "en": "Spinning, spinning around"
+        "start": 2.82,
+        "end": 5.32,
+        "ko": "강강술래",
+        "en": "Ganggangsullae"
       },
       {
-        "start": 9.551,
-        "end": 14.166,
-        "ko": "춤을 춥시다",
-        "en": "Let's dance together"
+        "start": 5.32,
+        "end": 7.82,
+        "ko": "동해 동천",
+        "en": "From the eastern sky"
       },
       {
-        "start": 14.166,
-        "end": 18.782,
-        "ko": "둥글게 둥글게 둥글게",
-        "en": "Round and round and round"
+        "start": 7.82,
+        "end": 10.32,
+        "ko": "강강술래",
+        "en": "Ganggangsullae"
       },
       {
-        "start": 18.782,
-        "end": 23.397,
-        "ko": "빙글빙글 돌아가며",
-        "en": "Spinning, spinning around"
+        "start": 10.32,
+        "end": 12.82,
+        "ko": "이태백이",
+        "en": "Where Li Bai"
       },
       {
-        "start": 23.397,
-        "end": 28.012,
-        "ko": "춤을 춥시다",
-        "en": "Let's dance together"
+        "start": 12.82,
+        "end": 15.32,
+        "ko": "강강술래",
+        "en": "Ganggangsullae"
+      },
+      {
+        "start": 15.32,
+        "end": 17.82,
+        "ko": "놀던 달아",
+        "en": "Used to play"
+      },
+      {
+        "start": 17.82,
+        "end": 20.32,
+        "ko": "강강술래",
+        "en": "Ganggangsullae"
+      },
+      {
+        "start": 20.32,
+        "end": 22.82,
+        "ko": "달 떠온다",
+        "en": "The moon is rising"
+      },
+      {
+        "start": 22.82,
+        "end": 25.32,
+        "ko": "강강술래",
+        "en": "Ganggangsullae"
+      },
+      {
+        "start": 25.32,
+        "end": 27.82,
+        "ko": "강강술래",
+        "en": "Ganggangsullae"
+      },
+      {
+        "start": 27.82,
+        "end": 30.32,
+        "ko": "강강술래",
+        "en": "Ganggangsullae"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "jack-jill",
@@ -1072,7 +1090,7 @@
         "en": "And Jill came tumbling after"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "hickory",
@@ -1137,101 +1155,137 @@
         "en": "The mouse ran down"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
-    "id": "clap",
+    "id": "three-mice",
     "no": 19,
-    "titleKo": "손뼉짝짝짝",
-    "titleEn": "Clap Clap Clap",
-    "emoji": "👏",
-    "category": "play",
-    "korean": true,
-    "color": "#FFE6C8",
-    "accent": "#F0A05A",
-    "bpm": 104,
-    "audio": "/audio/clap.mp3",
-    "duration": 24.1,
+    "titleKo": "생쥐 세 마리",
+    "titleEn": "Three Blind Mice",
+    "emoji": "🐭",
+    "category": "animal",
+    "korean": false,
+    "color": "#F5D0D8",
+    "accent": "#E08AA0",
+    "bpm": 88,
+    "audio": "/audio/three-mice.mp3",
+    "duration": 32.38,
     "lyrics": [
       {
         "start": 0.32,
-        "end": 4.935,
-        "ko": "손뼉 짝짝짝",
-        "en": "Clap clap clap"
+        "end": 3.047,
+        "ko": "생쥐 세 마리",
+        "en": "Three blind mice"
       },
       {
-        "start": 4.935,
-        "end": 9.551,
-        "ko": "발도 쿵쿵쿵",
-        "en": "Stomp stomp stomp"
+        "start": 3.047,
+        "end": 5.775,
+        "ko": "생쥐 세 마리",
+        "en": "Three blind mice"
       },
       {
-        "start": 9.551,
-        "end": 14.166,
-        "ko": "고개를 끄덕끄덕",
-        "en": "Nod your little head"
+        "start": 5.775,
+        "end": 10.547,
+        "ko": "어떻게 달려가나요",
+        "en": "See how they run"
       },
       {
-        "start": 14.166,
-        "end": 18.782,
-        "ko": "손뼉 짝짝짝",
-        "en": "Clap clap clap"
+        "start": 10.547,
+        "end": 15.32,
+        "ko": "어떻게 달려가나요",
+        "en": "See how they run"
       },
       {
-        "start": 18.782,
-        "end": 23.397,
-        "ko": "웃으며 따라해요",
-        "en": "Smile and follow me"
+        "start": 15.32,
+        "end": 18.047,
+        "ko": "생쥐 세 마리",
+        "en": "Three blind mice"
+      },
+      {
+        "start": 18.047,
+        "end": 20.775,
+        "ko": "생쥐 세 마리",
+        "en": "Three blind mice"
+      },
+      {
+        "start": 20.775,
+        "end": 25.547,
+        "ko": "어떻게 달려가나요",
+        "en": "See how they run"
+      },
+      {
+        "start": 25.547,
+        "end": 31.684,
+        "ko": "어떻게 달려가나요",
+        "en": "See how they run"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
-    "id": "sun",
+    "id": "humpty",
     "no": 20,
-    "titleKo": "햇님 방긋",
-    "titleEn": "Smiling Sun",
-    "emoji": "☀️",
-    "category": "play",
-    "korean": true,
-    "color": "#FFF4A8",
-    "accent": "#F0C43A",
-    "bpm": 100,
-    "audio": "/audio/sun.mp3",
-    "duration": 25.02,
+    "titleKo": "험프티 덤프티",
+    "titleEn": "Humpty Dumpty",
+    "emoji": "🥚",
+    "category": "story",
+    "korean": false,
+    "color": "#F8E8C0",
+    "accent": "#E2C56A",
+    "bpm": 90,
+    "audio": "/audio/humpty.mp3",
+    "duration": 41.69,
     "lyrics": [
       {
         "start": 0.32,
-        "end": 5.12,
-        "ko": "햇님 햇님 방긋방긋",
-        "en": "Sunshine, sunshine, smile at me"
+        "end": 5.653,
+        "ko": "험프티 덤프티 담장 위에",
+        "en": "Humpty Dumpty sat on a wall"
       },
       {
-        "start": 5.12,
-        "end": 9.92,
-        "ko": "따뜻하게 비춰줘요",
-        "en": "Warm and bright today"
+        "start": 5.653,
+        "end": 10.32,
+        "ko": "험프티 덤프티 떨어졌네",
+        "en": "Humpty Dumpty had a great fall"
       },
       {
-        "start": 9.92,
-        "end": 14.72,
-        "ko": "아기야 일어나요",
-        "en": "Wake up little baby"
+        "start": 10.32,
+        "end": 15.653,
+        "ko": "임금님의 말과 병사들이",
+        "en": "All the king's horses and all the king's men"
       },
       {
-        "start": 14.72,
-        "end": 19.52,
-        "ko": "햇님 햇님 방긋방긋",
-        "en": "Sunshine, sunshine, smile at me"
+        "start": 15.653,
+        "end": 19.653,
+        "ko": "다시 붙일 수 없었죠",
+        "en": "Couldn't put Humpty together again"
       },
       {
-        "start": 19.52,
-        "end": 24.32,
-        "ko": "밖으로 놀러가요",
-        "en": "Let's go out and play"
+        "start": 19.653,
+        "end": 24.987,
+        "ko": "험프티 덤프티 담장 위에",
+        "en": "Humpty Dumpty sat on a wall"
+      },
+      {
+        "start": 24.987,
+        "end": 29.653,
+        "ko": "험프티 덤프티 떨어졌네",
+        "en": "Humpty Dumpty had a great fall"
+      },
+      {
+        "start": 29.653,
+        "end": 34.987,
+        "ko": "임금님의 말과 병사들이",
+        "en": "All the king's horses and all the king's men"
+      },
+      {
+        "start": 34.987,
+        "end": 40.987,
+        "ko": "다시 붙일 수 없었죠",
+        "en": "Couldn't put Humpty together again"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "mulberry",
@@ -1296,107 +1350,137 @@
         "en": "On a cold and frosty morning"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
-    "id": "hello",
+    "id": "bo-peep",
     "no": 22,
-    "titleKo": "안녕안녕",
-    "titleEn": "Hello Hello",
-    "emoji": "👋",
-    "category": "play",
-    "korean": true,
-    "color": "#FFE4C8",
-    "accent": "#F0A05A",
-    "bpm": 104,
-    "audio": "/audio/hello.mp3",
-    "duration": 24.1,
+    "titleKo": "꼬마 보핍",
+    "titleEn": "Little Bo-Peep",
+    "emoji": "🎀",
+    "category": "story",
+    "korean": false,
+    "color": "#F6D8EC",
+    "accent": "#E090C0",
+    "bpm": 86,
+    "audio": "/audio/bo-peep.mp3",
+    "duration": 43.58,
     "lyrics": [
       {
         "start": 0.32,
-        "end": 4.935,
-        "ko": "안녕 안녕 안녕",
-        "en": "Hello, hello, hello"
+        "end": 5.901,
+        "ko": "꼬마 보핍이 양을 잃었어요",
+        "en": "Little Bo-Peep has lost her sheep"
       },
       {
-        "start": 4.935,
-        "end": 9.551,
-        "ko": "친구야 안녕",
-        "en": "Hello my friend"
+        "start": 5.901,
+        "end": 10.785,
+        "ko": "어디에 있는지 몰라요",
+        "en": "And can't tell where to find them"
       },
       {
-        "start": 9.551,
-        "end": 14.166,
-        "ko": "손을 흔들며 안녕",
-        "en": "Wave your hand and say hello"
+        "start": 10.785,
+        "end": 16.367,
+        "ko": "그냥 두렴 집으로 올 거야",
+        "en": "Leave them alone and they'll come home"
       },
       {
-        "start": 14.166,
-        "end": 18.782,
-        "ko": "안녕 안녕 안녕",
-        "en": "Hello, hello, hello"
+        "start": 16.367,
+        "end": 21.25,
+        "ko": "꼬리를 흔들며 온대요",
+        "en": "Wagging their tails behind them"
       },
       {
-        "start": 18.782,
-        "end": 23.397,
-        "ko": "우리 모두 안녕",
-        "en": "Hello everyone"
+        "start": 21.25,
+        "end": 26.832,
+        "ko": "꼬마 보핍이 양을 잃었어요",
+        "en": "Little Bo-Peep has lost her sheep"
+      },
+      {
+        "start": 26.832,
+        "end": 31.715,
+        "ko": "어디에 있는지 몰라요",
+        "en": "And can't tell where to find them"
+      },
+      {
+        "start": 31.715,
+        "end": 37.297,
+        "ko": "그냥 두렴 집으로 올 거야",
+        "en": "Leave them alone and they'll come home"
+      },
+      {
+        "start": 37.297,
+        "end": 42.878,
+        "ko": "꼬리를 흔들며 온대요",
+        "en": "Wagging their tails behind them"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
-    "id": "jump",
+    "id": "this-old-man",
     "no": 23,
-    "titleKo": "깡충깡충",
-    "titleEn": "Hop Hop Hop",
-    "emoji": "🐰",
+    "titleKo": "이 할아버지",
+    "titleEn": "This Old Man",
+    "emoji": "🥁",
     "category": "play",
-    "korean": true,
-    "color": "#E4F4C8",
-    "accent": "#88C46A",
+    "korean": false,
+    "color": "#F8DCC8",
+    "accent": "#E0A07A",
     "bpm": 108,
-    "audio": "/audio/jump.mp3",
-    "duration": 27.69,
+    "audio": "/audio/this-old-man.mp3",
+    "duration": 35.46,
     "lyrics": [
       {
         "start": 0.32,
         "end": 4.764,
-        "ko": "깡충깡충 토끼가",
-        "en": "Hop hop hop goes bunny"
+        "ko": "이 할아버지 하나",
+        "en": "This old man, he played one"
       },
       {
         "start": 4.764,
         "end": 9.209,
-        "ko": "깡충깡충 뛰어요",
-        "en": "Hop hop hop so high"
+        "ko": "엄지 손가락으로 북을 치네",
+        "en": "He played knick-knack on my thumb"
       },
       {
         "start": 9.209,
-        "end": 13.653,
-        "ko": "앞발로 깡충",
-        "en": "Front paws hop hop"
+        "end": 12.542,
+        "ko": "닉낵 패디왁 북을 치며",
+        "en": "With a knick-knack paddywhack"
       },
       {
-        "start": 13.653,
-        "end": 18.098,
-        "ko": "뒷발로 깡충",
-        "en": "Back paws hop hop"
+        "start": 12.542,
+        "end": 17.542,
+        "ko": "강아지에게 뼈다귀",
+        "en": "Give a dog a bone"
       },
       {
-        "start": 18.098,
-        "end": 22.542,
-        "ko": "깡충깡충 뛰어요",
-        "en": "Hop hop hop so high"
+        "start": 17.542,
+        "end": 21.987,
+        "ko": "이 할아버지 둘",
+        "en": "This old man, he played two"
       },
       {
-        "start": 22.542,
-        "end": 26.987,
-        "ko": "아기랑 같이 뛰어요",
-        "en": "Baby hop along with me"
+        "start": 21.987,
+        "end": 26.431,
+        "ko": "신발 위에서 북을 치네",
+        "en": "He played knick-knack on my shoe"
+      },
+      {
+        "start": 26.431,
+        "end": 29.764,
+        "ko": "닉낵 패디왁 북을 치며",
+        "en": "With a knick-knack paddywhack"
+      },
+      {
+        "start": 29.764,
+        "end": 34.764,
+        "ko": "이 할아버지 집으로",
+        "en": "This old man came rolling home"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "brahms",
@@ -1410,58 +1494,58 @@
     "accent": "#9B90D8",
     "bpm": 72,
     "audio": "/audio/brahms.mp3",
-    "duration": 41.44,
+    "duration": 81.02,
     "lyrics": [
       {
         "start": 0.32,
-        "end": 5.32,
+        "end": 10.32,
         "ko": "잘 자렴 아기야",
         "en": "Lullaby, and good night"
       },
       {
-        "start": 5.32,
-        "end": 10.32,
+        "start": 10.32,
+        "end": 20.32,
         "ko": "엄마 품에서",
         "en": "With roses bedight"
       },
       {
-        "start": 10.32,
-        "end": 15.32,
+        "start": 20.32,
+        "end": 30.32,
         "ko": "별이 반짝이면",
         "en": "With lilies o'er spread"
       },
       {
-        "start": 15.32,
-        "end": 20.32,
+        "start": 30.32,
+        "end": 40.32,
         "ko": "꿈나라로 가요",
         "en": "Is baby's wee bed"
       },
       {
-        "start": 20.32,
-        "end": 25.32,
+        "start": 40.32,
+        "end": 50.32,
         "ko": "잘 자렴 아기야",
         "en": "Lullaby, and good night"
       },
       {
-        "start": 25.32,
-        "end": 30.32,
+        "start": 50.32,
+        "end": 60.32,
         "ko": "포근한 자장가",
         "en": "Thy mother's delight"
       },
       {
-        "start": 30.32,
-        "end": 35.32,
+        "start": 60.32,
+        "end": 70.32,
         "ko": "달빛 아래 살며시",
         "en": "Lay thee down now and rest"
       },
       {
-        "start": 35.32,
-        "end": 40.737,
+        "start": 70.32,
+        "end": 80.32,
         "ko": "눈을 감아요",
         "en": "May thy slumber be blessed"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "pat-a-cake",
@@ -1526,7 +1610,7 @@
         "en": "And put it in the oven for baby and me"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "polly-kettle",
@@ -1591,7 +1675,7 @@
         "en": "They've all gone away"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "alphabet",
@@ -1644,7 +1728,7 @@
         "en": "Next time won't you sing with me"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "rain-away",
@@ -1709,7 +1793,7 @@
         "en": "Rain, rain, go away"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
     "id": "skip-lou",
@@ -1774,59 +1858,71 @@
         "en": "Skip to my Lou, my darling"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   },
   {
-    "id": "hide",
+    "id": "farmer-dell",
     "no": 30,
-    "titleKo": "꼭꼭 숨어라",
-    "titleEn": "Hide and Seek",
-    "emoji": "🙈",
+    "titleKo": "농부 아저씨",
+    "titleEn": "The Farmer in the Dell",
+    "emoji": "🚜",
     "category": "play",
-    "korean": true,
-    "color": "#F6D0D4",
-    "accent": "#E08090",
+    "korean": false,
+    "color": "#E4F4C8",
+    "accent": "#A8CC6A",
     "bpm": 100,
-    "audio": "/audio/hide.mp3",
-    "duration": 29.82,
+    "audio": "/audio/farmer-dell.mp3",
+    "duration": 31.02,
     "lyrics": [
       {
         "start": 0.32,
-        "end": 5.12,
-        "ko": "꼭꼭 숨어라",
-        "en": "Hide, hide, hide away"
+        "end": 3.92,
+        "ko": "농부 아저씨가 들에",
+        "en": "The farmer in the dell"
       },
       {
-        "start": 5.12,
-        "end": 9.92,
-        "ko": "머리카락 보인다",
-        "en": "I can see your hair"
+        "start": 3.92,
+        "end": 7.52,
+        "ko": "농부 아저씨가 들에",
+        "en": "The farmer in the dell"
       },
       {
-        "start": 9.92,
-        "end": 14.72,
-        "ko": "하나 둘 셋",
-        "en": "One, two, three"
+        "start": 7.52,
+        "end": 10.52,
+        "ko": "하이호 체리오",
+        "en": "Hi-ho the derry-o"
       },
       {
-        "start": 14.72,
-        "end": 19.52,
-        "ko": "내가 찾았다",
-        "en": "I found you"
+        "start": 10.52,
+        "end": 15.32,
+        "ko": "농부 아저씨가 들에",
+        "en": "The farmer in the dell"
       },
       {
-        "start": 19.52,
-        "end": 24.32,
-        "ko": "꼭꼭 숨어라",
-        "en": "Hide, hide, hide away"
+        "start": 15.32,
+        "end": 18.92,
+        "ko": "농부가 부인을 데려와요",
+        "en": "The farmer takes a wife"
       },
       {
-        "start": 24.32,
-        "end": 29.12,
-        "ko": "다시 숨어요",
-        "en": "Hide again with me"
+        "start": 18.92,
+        "end": 22.52,
+        "ko": "농부가 부인을 데려와요",
+        "en": "The farmer takes a wife"
+      },
+      {
+        "start": 22.52,
+        "end": 25.52,
+        "ko": "하이호 체리오",
+        "en": "Hi-ho the derry-o"
+      },
+      {
+        "start": 25.52,
+        "end": 30.32,
+        "ko": "농부가 부인을 데려와요",
+        "en": "The farmer takes a wife"
       }
     ],
-    "source": "전래·퍼블릭 도메인 동요 · 부드러운 피아노 편곡"
+    "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡"
   }
 ]
