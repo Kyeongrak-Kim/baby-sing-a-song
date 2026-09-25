@@ -1,0 +1,18 @@
+{
+  "name": "아기 동요",
+  "short_name": "아기 동요",
+  "description": "파스텔 톤 아기 동요 30곡",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF6F0",
+  "theme_color": "#F8D5E0",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
