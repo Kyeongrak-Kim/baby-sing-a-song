@@ -65,38 +65,31 @@ def hz(midi: int) -> float:
     return 440.0 * (2 ** ((midi - 69) / 12))
 
 
-def tone(freq: float, n: int, kind: str, rng: np.random.Generator) -> np.ndarray:
+def felt_piano(freq: float, n: int, velocity: float = 1.0) -> np.ndarray:
+    """Round felt-piano partials. No hammer click."""
     t = np.arange(n) / SR
-    if kind == "piano":
-        decay = np.exp(-t * (2.1 + freq / 1800))
-        sig = (
-            np.sin(2 * math.pi * freq * t)
-            + 0.22 * np.sin(2 * math.pi * freq * 2 * t)
-            + 0.08 * np.sin(2 * math.pi * freq * 3 * t)
-            + 0.03 * np.sin(2 * math.pi * freq * 4 * t)
-        )
-        hammer = rng.normal(0, 1, n) * np.exp(-t * 70) * 0.03
-        return (sig * decay + hammer) * ads(n, 0.006, 0.07, 0.42, 0.16)
-    if kind == "celesta":
-        decay = np.exp(-t * 4.4)
-        sig = np.sin(2 * math.pi * freq * t) + 0.12 * np.sin(2 * math.pi * freq * 2 * t)
-        return sig * decay * ads(n, 0.004, 0.05, 0.3, 0.1)
-    if kind == "pad":
-        sig = 0.7 * np.sin(2 * math.pi * freq * t) + 0.12 * np.sin(2 * math.pi * freq * 2 * t)
-        return sig * ads(n, 0.04, 0.1, 0.38, 0.22)
-    if kind == "bass":
-        sig = np.sin(2 * math.pi * freq * t) * np.exp(-t * 3.2)
-        return sig * ads(n, 0.01, 0.06, 0.35, 0.12)
-    decay = np.exp(-t * 3.2)
-    sig = np.sin(2 * math.pi * freq * t) + 0.12 * np.sin(2 * math.pi * freq * 2 * t)
-    return sig * decay * ads(n, 0.006, 0.05, 0.4, 0.12)
+    sig = np.zeros(n, dtype=np.float64)
+    for k, amp in enumerate((1.0, 0.34, 0.12, 0.045, 0.012), start=1):
+        stretch = 1.0 + 0.00012 * k * k
+        partial = freq * k * stretch
+        if partial > 7600:
+            break
+        sig += amp * np.sin(2 * math.pi * partial * t)
+    # A whisper of a second string, a few cents sharp, for width.
+    sig += 0.16 * np.sin(2 * math.pi * freq * 1.003 * t)
+    decay = np.exp(-t * (0.95 + freq / 1400.0))
+    rel = min(0.2, max(0.045, n / SR * 0.42))
+    return sig * decay * ads(n, 0.014, 0.16, 0.62, rel) * velocity
 
 
-def soft_tick(n: int, rng: np.random.Generator) -> np.ndarray:
+def warm_pad(freq: float, n: int) -> np.ndarray:
     t = np.arange(n) / SR
-    click = np.sin(2 * math.pi * 420 * t) * np.exp(-t * 48)
-    noise = rng.normal(0, 1, n) * np.exp(-t * 70)
-    return click * 0.12 + noise * 0.04
+    sig = (
+        np.sin(2 * math.pi * freq * t)
+        + np.sin(2 * math.pi * freq * 1.004 * t)
+        + 0.45 * np.sin(2 * math.pi * freq * 0.5 * t)
+    )
+    return sig * ads(n, 0.12, 0.22, 0.72, 0.4)
 
 
 def lowpass(sig: np.ndarray, cutoff: float) -> np.ndarray:
@@ -108,11 +101,11 @@ def lowpass(sig: np.ndarray, cutoff: float) -> np.ndarray:
     return np.convolve(sig, kernel, mode="same")
 
 
-def add_echo(mix: np.ndarray, delay_s: float, wet: float) -> None:
-    shift = int(delay_s * SR)
-    if shift <= 0 or shift >= len(mix):
-        return
-    mix[shift:] += mix[:-shift] * wet
+METER3 = {"brahms", "fox", "arirang"}
+MAJOR_STEPS = (0, 2, 4, 5, 7, 9, 11)
+MINOR_STEPS = (0, 2, 3, 5, 7, 8, 10)
+MAJOR_TRIADS = ((0, 4, 7), (5, 9, 0), (7, 11, 2), (9, 0, 4))
+MINOR_TRIADS = ((0, 3, 7), (5, 8, 0), (3, 7, 10), (8, 0, 3))
 
 
 def song_bpm(song: dict) -> int:
@@ -123,57 +116,139 @@ def song_bpm(song: dict) -> int:
     return max(88, min(bpm, 110))
 
 
+def infer_key(notes: list[tuple[int | None, float]]) -> tuple[int, str]:
+    pitched = [(m, d) for m, d in notes if m is not None]
+    tonic = pitched[-1][0] % 12
+    pcs = {m % 12 for m, _ in pitched}
+    major = {(tonic + s) % 12 for s in MAJOR_STEPS}
+    minor = {(tonic + s) % 12 for s in MINOR_STEPS}
+    mode = "minor" if len(pcs - minor) < len(pcs - major) else "major"
+    return tonic, mode
+
+
+def bar_triad(group: list[tuple[int, float]], tonic: int, mode: str) -> tuple[int, int, int]:
+    triads = MINOR_TRIADS if mode == "minor" else MAJOR_TRIADS
+    best = triads[0]
+    best_score = -1.0
+    for index, triad in enumerate(triads):
+        tones = {(tonic + step) % 12 for step in triad}
+        score = sum(d for m, d in group if m % 12 in tones)
+        # Prefer the home chord when the bar fits more than one triad.
+        score += (0.35, 0.15, 0.05, 0.2)[index]
+        if score > best_score:
+            best, best_score = triad, score
+    return best
+
+
+def place(bus: np.ndarray, i0: int, sig: np.ndarray, gain: float) -> None:
+    if gain == 0 or i0 >= len(bus) or len(sig) == 0:
+        return
+    i1 = min(len(bus), i0 + len(sig))
+    n = i1 - i0
+    if n > 0:
+        bus[i0:i1] += sig[:n] * gain
+
+
+def voice_midi(pc: int, low: int, high: int) -> int:
+    midi = low + (pc - (low % 12)) % 12
+    while midi < low:
+        midi += 12
+    while midi > high:
+        midi -= 12
+    return midi
+
+
 def render_song(song: dict) -> tuple[np.ndarray, list[dict], float]:
     notes = parse_notes(song["notes"])
     style = song.get("style", "play")
     bpm = song_bpm(song)
     beat_sec = 60.0 / bpm
     lead = 0.32
-    tail = 0.7
+    tail = 1.15
     total_beats = sum(d for _, d in notes)
     duration = lead + total_beats * beat_sec + tail
     n_total = int(duration * SR) + 1
-    mix = np.zeros(n_total, dtype=np.float64)
-    rng = np.random.default_rng(abs(hash(song["id"])) % (2**32))
-    use_perc = bool(song.get("perc")) and style != "lullaby"
+    melody = np.zeros(n_total, dtype=np.float64)
+    harmony = np.zeros(n_total, dtype=np.float64)
+    meter = 3 if song["id"] in METER3 else 4
+    tonic, mode = infer_key(notes)
 
     beat_pos = 0.0
+    timed: list[tuple[float, int | None, float]] = []
     for midi, dur in notes:
-        start = lead + beat_pos * beat_sec
-        end = start + dur * beat_sec
+        timed.append((beat_pos, midi, dur))
         beat_pos += dur
+
+    for start_beat, midi, dur in timed:
         if midi is None:
             continue
-        midi = min(max(midi, 50), 79)
-        gap = 0.018 if dur >= 0.45 else 0.006
-        n = int(max(end - start - gap, 0.04) * SR)
+        midi = min(max(midi, 48), 84)
+        start = lead + start_beat * beat_sec
+        # Notes overlap a little so the line sings instead of pecking.
+        hold = dur * beat_sec + 0.07
+        n = int(max(hold, 0.05) * SR)
         i0 = int(start * SR)
-        i1 = min(n_total, i0 + n)
-        n = i1 - i0
-        if n <= 0:
-            continue
-        piano = tone(hz(midi), n, "piano", rng)
-        if style == "lullaby":
-            pad = tone(hz(max(midi - 12, 40)), n, "pad", rng) * 0.1
-            mix[i0:i1] += 0.78 * piano + pad
-        else:
-            air = tone(hz(midi), n, "celesta", rng) * 0.14
-            bass = np.zeros(n)
-            if abs((beat_pos - dur) % 2) < 0.08:
-                bass = tone(hz(max((midi // 12) * 12, 43)), n, "bass", rng) * 0.12
-            mix[i0:i1] += 0.74 * piano + air + bass
-            if use_perc and abs(beat_pos - round(beat_pos)) < 0.08:
-                pn = min(int(0.05 * SR), n_total - i0)
-                mix[i0 : i0 + pn] += soft_tick(pn, rng)
+        place(melody, i0, felt_piano(hz(midi), n, 0.92), 0.7)
+        if midi - 12 >= 40:
+            place(melody, i0, felt_piano(hz(midi - 12), n, 0.55), 0.16)
 
-    mix = lowpass(mix, 2400 if style == "lullaby" else 2800)
-    add_echo(mix, 0.11, 0.12)
-    add_echo(mix, 0.21, 0.06)
-    peak = np.max(np.abs(mix)) or 1.0
-    mix = mix / peak * 0.72
-    fade = int(0.05 * SR)
-    mix[:fade] *= np.linspace(0, 1, fade)
-    mix[-fade:] *= np.linspace(1, 0, fade)
+    # One soft chord per bar, held under the melody.
+    bar = 0
+    while bar * meter < total_beats - 0.05:
+        bar_start = bar * meter
+        bar_end = min(total_beats, bar_start + meter)
+        group = [
+            (m, d)
+            for b, m, d in timed
+            if m is not None and bar_start - 0.01 <= b < bar_end - 0.01
+        ]
+        if group:
+            triad = bar_triad(group, tonic, mode)
+            i0 = int((lead + bar_start * beat_sec) * SR)
+            n = int(((bar_end - bar_start) * beat_sec + 0.28) * SR)
+            gains = (0.11, 0.07, 0.08) if style == "lullaby" else (0.13, 0.075, 0.09)
+            for step, gain in zip(triad, gains):
+                pc = (tonic + step) % 12
+                rootish = step == triad[0]
+                voiced = voice_midi(pc, 46 if rootish else 58, 64 if rootish else 74)
+                place(harmony, i0, warm_pad(hz(voiced), n), gain)
+        bar += 1
+
+    # Gentle left hand on the first beat of the bar. Lullabies stay pad-only.
+    if style != "lullaby":
+        bass_pc = tonic
+        bass_midi = voice_midi(bass_pc, 43, 52)
+        beat = 0.0
+        while beat < total_beats - 0.05:
+            i0 = int((lead + beat * beat_sec) * SR)
+            n = int(min(meter * 0.55, 1.6) * beat_sec * SR)
+            place(harmony, i0, felt_piano(hz(bass_midi), n, 0.7), 0.2)
+            beat += meter
+
+    melody = lowpass(melody, 3400 if style == "lullaby" else 4200)
+    harmony = lowpass(harmony, 1600)
+    send = lowpass(melody * 0.42 + harmony, 2400)
+    room = np.zeros(n_total, dtype=np.float64)
+    for delay, wet in ((0.031, 0.22), (0.047, 0.16), (0.061, 0.11), (0.083, 0.07), (0.109, 0.045)):
+        shift = int(delay * SR)
+        if shift < n_total:
+            room[shift:] += send[:-shift] * wet
+    room = lowpass(room, 2800)
+
+    left = melody + harmony + room
+    right = melody + harmony + room
+    harm_shift = int(0.013 * SR)
+    if harm_shift < n_total:
+        right[harm_shift:] += harmony[:-harm_shift] * 0.35
+        left[harm_shift // 2 :] += harmony[: n_total - harm_shift // 2] * 0.22
+    stereo = np.stack((left, right), axis=1)
+    stereo = np.tanh(stereo * 1.15)
+    peak = float(np.max(np.abs(stereo)) or 1.0)
+    stereo = stereo / peak * 0.8
+    fade = int(0.06 * SR)
+    stereo[:fade] *= np.linspace(0, 1, fade)[:, None]
+    stereo[-fade:] *= np.linspace(1, 0, fade)[:, None]
+    mix = stereo
 
     lines = song["lines"]
     lyrics = []
@@ -197,6 +272,8 @@ def render_song(song: dict) -> tuple[np.ndarray, list[dict], float]:
 
 def wav_to_mp3(wav: np.ndarray, dest: Path) -> None:
     raw = np.clip(wav, -1, 1)
+    if raw.ndim == 1:
+        raw = np.stack((raw, raw), axis=1)
     pcm = (raw * 32767).astype("<i2").tobytes()
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(".wav")
@@ -211,9 +288,9 @@ def wav_to_mp3(wav: np.ndarray, dest: Path) -> None:
             "-codec:a",
             "libmp3lame",
             "-q:a",
-            "5",
+            "2",
             "-ac",
-            "1",
+            "2",
             str(dest),
         ],
         stdout=subprocess.DEVNULL,
@@ -225,6 +302,9 @@ def wav_to_mp3(wav: np.ndarray, dest: Path) -> None:
 def _wav_header(data_bytes: int) -> bytes:
     import struct
 
+    channels = 2
+    bits = 16
+    block = channels * bits // 8
     return struct.pack(
         "<4sI4s4sIHHIIHH4sI",
         b"RIFF",
@@ -233,11 +313,11 @@ def _wav_header(data_bytes: int) -> bytes:
         b"fmt ",
         16,
         1,
-        1,
+        channels,
         SR,
-        SR * 2,
-        2,
-        16,
+        SR * block,
+        block,
+        bits,
         b"data",
         data_bytes,
     )
@@ -1217,7 +1297,7 @@ def main() -> None:
                 "audio": f"/audio/{song['id']}.mp3",
                 "duration": round(duration, 2),
                 "lyrics": lyrics,
-                "source": "전래·퍼블릭 도메인 계이름 · 부드러운 피아노 편곡",
+                "source": "전래·퍼블릭 도메인 계이름 · 펠트 피아노와 따뜻한 화음",
             }
         )
         print(f"{i:02d} {song['id']:16s} {duration:6.1f}s  {song['titleKo']}")
